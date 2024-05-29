@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Encode+Sans+Expanded:wght@300&display=swap');
+
+/* font-family: "Playfair Display", serif; */
+/* font-family: "Encode Sans Expanded", sans-serif; */
+
+*{
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+ /* navbar css */
+ .navbar{
+  font-family: "Encode Sans Expanded", sans-serif;
+  font-size: 17px;
+  line-height: 26px;
+  text-transform: uppercase;
+  box-shadow: 0 5px 6px -6px gray;
+  --webkit-box-shadow: 0 5px 6px -6px gray;
+  border-bottom: 0px solid gray;
+  /* background: rgb(29,243,237);
+  background: linear-gradient(180deg, rgba(29,243,237,1) 0%, rgba(135,236,226,0.8425421193868172) 100%); */
+  /* background: -webkit-linear-gradient(90deg, #ffdcc5be 5%, #cf8b5dac 100%); */
+}
+
+.nav-link{
+  font-weight: 300 !important;
+}
+
+.active{
+  border-bottom: 2px solid black;
+}
+
+.navbar-brand{
+  font-weight: 700;
+  font-family: 'roboto', sans-serif;
+  letter-spacing: 1.5px;
+}
+
+
+/* =================================
+======== page not found css ======= */
+.pnf {
+  display: flex;
+  min-height: 65vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pnf-title {
+  font-size: 100px;
+  font-weight: 700;
+}
+
+.pnf-heading {
+  font-weight: normal;
+}
+
+.pnf-btn {
+  color: black;
+  border: 1px solid black;
+  text-decoration: none;
+  padding: 10px;
+  margin-top: 10px;
+}
+.pnf-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+/* Footer css */
+.footer{
+  color: white;
+  padding: 25px;
+  background: #000000;
+  background: --webkit-linear-gradient(to right,#434343,#000000);
+  background: linear-gradient(to right,#434343,#000000);
+}
+
+.footer a{
+  text-decoration: none;
+  color: white;
+  padding: 10px;
+}
+.footer a:hover{
+  color: #ffefba;
+  border-bottom: 1px solid #ffefba;
+}
+
+/* login css */
+.login{
+  min-height: 72vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.login-body{
+  background-color: rgba(237, 235, 232, 0.448);
+  padding: 4vh;
+  border-radius: 1rem;
+  box-shadow: 8px 8px 6px -6px gray;
+  &>form{
+    margin-top: 3rem;
+    min-width: 40vw;
+    /* width: 40vw; */
+  }
+}
+
+/* register css */
+.register{
+  min-height: 72vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.register-body{
+  background-color: rgba(237, 235, 232, 0.448);
+  padding: 4vh;
+  border-radius: 1rem;
+  box-shadow: 8px 8px 6px -6px gray;
+  &>form{
+    margin-top: 3rem;
+    min-width: 40vw;
+    /* width: 40vw; */
+  }
+}
+
+.lt-bg-gradient{
+  /* background: rgb(222,236,172); */
+  /* background: radial-gradient(circle, rgba(222,236,172,1) 1%, rgba(141,239,236,1) 80%);  */
+  /* background: rgb(255,101,101);
+  background: linear-gradient(0deg, rgba(255,101,101,1) 0%, rgba(255,224,124,1) 100%); */
+  /* background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 1%, rgba(148,187,233,1) 100%); */
+  background: #fff6f6a2;
+}
+
+
+.lt-card-color{
+  background-color: rgba(247, 245, 242, 0.473);
+  border: 0.2px black solid;
+}
