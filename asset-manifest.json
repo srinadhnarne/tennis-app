@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/srinadhnarne/tennis-app/static/css/main.dc7f79f8.css",
+    "main.js": "/srinadhnarne/tennis-app/static/js/main.f7bdac14.js",
+    "static/media/logo.png": "/srinadhnarne/tennis-app/static/media/logo.5bae00b191128fa462c6.png",
+    "index.html": "/srinadhnarne/tennis-app/index.html",
+    "main.dc7f79f8.css.map": "/srinadhnarne/tennis-app/static/css/main.dc7f79f8.css.map",
+    "main.f7bdac14.js.map": "/srinadhnarne/tennis-app/static/js/main.f7bdac14.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dc7f79f8.css",
+    "static/js/main.f7bdac14.js"
+  ]
+}
