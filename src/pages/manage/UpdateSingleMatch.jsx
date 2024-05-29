@@ -8,7 +8,9 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 const UpdateSingleMatch = ({mid,stateSetter}) => {
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
+    const [scores,setScores] = useState({});
     const [matchDate,setMatchDate] = useState("");
+    const [matchResult,setMatchResult] = useState("");
 
     const getMatchDetails = async()=>{
         const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-single-match/${mid}`);
@@ -16,6 +18,8 @@ const UpdateSingleMatch = ({mid,stateSetter}) => {
             setTeamNames({...teamNames,teamA:data.match.teamA.teamName,teamB:data.match.teamB.teamName});
             setTeamPlayers({...teamPlayers,teamA:[...data.match.teamA.teamPlayers],teamB:[...data.match.teamB.teamPlayers]});
             setMatchDate(data.match.matchDate);
+            setScores({...data.match.scores});
+            setMatchResult(data.match.matchResult);
         }else{
             toast.error(data?.message);
         }
@@ -37,7 +41,9 @@ const UpdateSingleMatch = ({mid,stateSetter}) => {
                     teamName:teamNames.teamB,
                     teamPlayers:teamPlayers.teamB
                 },
-                matchDate
+                matchDate,
+                scores,
+                matchResult
             });
             if(data?.success){
                 toast.success(data?.message);
@@ -76,6 +82,25 @@ const UpdateSingleMatch = ({mid,stateSetter}) => {
         }
     }
 
+    const handleNameChange = (oldName,newName)=>{
+        if(scores.sets.length>0){
+            let newScores = {...scores};
+            for(let i = 0; i < scores.sets.length; i++){
+                for(let j = 0; j < scores.sets[i].length; j++){
+                    if(scores.sets[i][j].result===oldName){
+                        scores.sets[i][j].result=newName;
+                    }
+                }
+                if(scores.setResult[i]===oldName){
+                    scores.setResult[i]=newName;
+                }
+            }
+            setScores({...newScores});
+        }
+        if(matchResult===oldName) setMatchResult(newName);
+        console.log(scores,matchResult);
+    }
+
     const handleBack = ()=>{
         stateSetter(false);
     }
@@ -106,7 +131,7 @@ const UpdateSingleMatch = ({mid,stateSetter}) => {
                                     aria-describedby="inputGroup-sizing-sm" 
                                     placeholder='Team Name'
                                     value={teamNames.teamA}
-                                    onChange={(e)=>{setTeamNames({...teamNames,teamA:e.target.value});}}
+                                    onChange={async (e)=>{handleNameChange(teamNames.teamA, e.target.value);setTeamNames({...teamNames,teamA:e.target.value});}}
                                     required
                                 />
                             </div>
@@ -119,7 +144,7 @@ const UpdateSingleMatch = ({mid,stateSetter}) => {
                                     aria-describedby="inputGroup-sizing-sm" 
                                     placeholder='Team Name'
                                     value={teamNames.teamB}
-                                    onChange={(e)=>{setTeamNames({...teamNames,teamB:e.target.value});}}
+                                    onChange={(e)=>{handleNameChange(teamNames.teamB, e.target.value);setTeamNames({...teamNames,teamB:e.target.value});}}
                                     required
                                 />
                             </div>

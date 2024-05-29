@@ -112,7 +112,7 @@ const TournamentDetails = () => {
                                     </div>
                                     <div className="card-text">Match Date : {m.matchDate}</div>
                                 </div>
-                                    <button onClick={()=>navigate(`/match-summary/${params.slug}/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
+                                    <button onClick={()=>navigate(`/match-summary/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
                             </div>
                         </div>
                     ))):(

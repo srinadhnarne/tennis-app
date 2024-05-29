@@ -33,7 +33,7 @@ function App() {
       <Route path='my-tournaments' element={<ManageTournament/>}/>
       <Route path='/manage-tournament/:slug' element={<ManageSingleTournament/>}/>
       <Route path='/tournament-details/:slug' element={<TournamentDetails/>}/>
-      <Route path='/match-summary/:slug/:id' element={<MatchSummary/>}/>
+      <Route path='/match-summary/:id' element={<MatchSummary/>}/>
       <Route path='/create-match/:slug' element={<CreateMatch/>}/>
       <Route path='/update-matches/:slug' element={<UpdateMatches/>}/>
       <Route path='/update-scores/:slug' element={<UpdateScores/>}/>

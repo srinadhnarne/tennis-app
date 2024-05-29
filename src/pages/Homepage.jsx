@@ -71,7 +71,7 @@ const Homepage = () => {
                     <div className="d-flex flex-row justify-content-center mb-2">
                       <p className="card-text mt-2 justify-content-center">Match Date : {m?.matchDate}</p>
                     </div>
-                    <button onClick={()=>navigate(`/match-summary/${m.tournament.slug}/${m._id}`)} className='btn btn-primary p-3'>More Deails</button>
+                    <button onClick={()=>navigate(`/match-summary/${m._id}`)} className='btn btn-primary p-3'>More Deails</button>
                 </div>
 
                 </>

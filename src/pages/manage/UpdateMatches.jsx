@@ -148,12 +148,12 @@ const UpdateMatches = () => {
                                                                         }
                                                                     </div>
                                                                 </div>
+                                                            </div>
                                                                 <p className="card-text mt-2">Match Date : {m?.matchDate}</p>
-                                                                <div className="ms-1">
+                                                                <div className="ms-1 mb-3">
                                                                     <button value={m._id} onClick={(e)=>{setCurrentMatchID(e.target.value);setUpdateMatch(true)}} className='btn btn-primary ms-2'>UPDATE</button>
                                                                     <button value={m._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2'>Delete</button>
                                                                 </div>
-                                                            </div>
                                                         </div>
                                                     )):
                                                         <h5 className='text-center'>No Matches to manage</h5>

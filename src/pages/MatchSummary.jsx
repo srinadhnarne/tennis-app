@@ -4,11 +4,9 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
-import { FaSquare } from 'react-icons/fa';
 
 const MatchSummary = () => {
   const [tournament,setTournament] = useState();
-    const [matches,setMatches] = useState([]);
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
     const [matchDate,setMatchDate] = useState("");
@@ -17,41 +15,6 @@ const MatchSummary = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const getTournament = async ()=>{
-        try{
-            const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/get-tournament/${params.slug}`);
-            if(data?.success){
-                setTournament(data.tournament);
-            }else{
-                toast.error(data?.message);
-            }
-        } catch(error){
-            console.log(error);
-        }
-    }
-
-    const getMatches = async()=>{
-        try{
-            const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-matches/${tournament._id}`);
-            if(data?.success){
-                setMatches(data.matches);
-                // console.log(data.matches,matches);
-            }else{
-                toast.error(data?.message);
-            }
-        } catch(error){
-            console.log(error);
-        }
-    }
-
-    useEffect(()=>{
-        getTournament();
-        
-    },[])
-
-    useEffect(()=>{
-        getMatches();
-    },[tournament])
 
     const getMatchDetails = async()=>{
       const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-single-match/${params.id}`);
@@ -61,6 +24,7 @@ const MatchSummary = () => {
           setMatchDate(data.match.matchDate);
           setMatchResult(data.match.matchResult);
           setscores({...data.match.scores});
+          setTournament({...data.match.tournament})
       }else{
           toast.error(data?.message);
       }
@@ -68,7 +32,7 @@ const MatchSummary = () => {
   
   useEffect(()=>{
       getMatchDetails();
-  },[]);
+  },[params?.id]);
 
   return (
     <Layout>
@@ -78,11 +42,6 @@ const MatchSummary = () => {
                 <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={50} /></div>
             </div>
           </div>
-          {/* <div className="row text-center">
-            <div className="col">
-              <h2>MATCH SUMMARY</h2>
-            </div>
-          </div> */}
           <div className="row">
             <div className="col">
               <div className="row text-center">
@@ -197,50 +156,6 @@ const MatchSummary = () => {
                 </div>
               </div>
             </div>
-            {matches.length>1&&<div className="col-md-4">
-              {matches&&<div className="row  mb-3">
-                  <div className="col d-flex flex-wrap justify-content-center">
-                      {matches.length>0?(matches?.map(m=>(
-                        m._id!==params.id&&(
-                          <div>
-                              <div className="card  m-3" style={{width: '18rem ', height:"15rem"}}>
-                                  <div className="card-body d-flex flex-column gap-2 justify-content-center">
-                                      <div className="row text-center">
-                                          <div className="col d-flex gap-2 flex-wrap justify-content-center align-content-center">
-                                              <div className="flex-sm-grow-1">
-                                                  <h5 className="card-title text-success">{m.teamA.teamName}</h5>
-                                                  <div>
-                                                      {m.teamA.teamPlayers?.map(player=>(
-                                                          <div className='text-success'>{player}</div>
-                                                      ))}
-                                                  </div>
-                                              </div>
-                                              <div className='d-flex align-items-center'>
-                                                      VS
-                                              </div>
-                                              <div className="flex-sm-grow-1">
-                                                  <h5 className="card-title text-info">{m.teamB.teamName}</h5>
-                                                  <div>
-                                                      {m.teamB.teamPlayers.map(player=>(
-                                                          <div className='text-info'>{player}</div>
-                                                      ))}
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div className="card-text">Match Date : {m.matchDate}</div>
-                                  </div>
-                                  <button onClick={()=>navigate(`/match-summary/${params.slug}/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
-                              </div>
-                          </div>)
-                      ))):(
-                          <div>
-                              No matches to display
-                          </div>
-                      )}
-                  </div>
-              </div>}
-            </div>}
           </div>
         </div>
     </Layout>
