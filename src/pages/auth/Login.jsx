@@ -6,9 +6,14 @@ import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const Login = () => {
+    const [loading,setloading] = useState(false);
     const [auth,setAuth] = useAuth();
     const [email,setEmail]=useState('');
     const [password,setPassword] = useState('');
+
+    const delay = async (ms) => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -28,6 +33,7 @@ const Login = () => {
             return;
         }
         try {
+            setloading(true);
             const {data} = await axios.post(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/login`,{
                 email, password
             });
@@ -38,13 +44,17 @@ const Login = () => {
                     user:data.user,
                     token:data.token
                 })
-                toast.success(data?.message);
+                toast.success(data?.message)&&await delay(500);
                 navigate(location.state ||'/');
+                setloading(false);
             } else{
                 toast.error(data?.message);
+                setloading(false);
             }
         } catch (error) {
-            toast.error('Something went wrong')
+            console.log(error);
+            toast.error('Something went wrong');
+            setloading(false);
         }
     }
   return (
@@ -75,10 +85,10 @@ const Login = () => {
                         />
                     </div>
                     <div className="mb-3 text-center">
-                        <button type="submit" className="btn btn-primary">LOGIN</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading?true:false}>LOGIN</button>
                     </div>
                     <div className="mb-3 text-center">
-                        <button className="btn btn-danger" onClick={()=>navigate('/forgot-password')}>FORGOT PASSWORD</button>
+                        <button className="btn btn-danger" onClick={()=>navigate('/forgot-password')} >FORGOT PASSWORD</button>
                     </div>
                 </form>
             </div>

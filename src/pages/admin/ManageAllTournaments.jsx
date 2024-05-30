@@ -4,10 +4,11 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/authContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import UserSideMenu from '../../components/Helpers/UserSideMenu';
 import AdminSideMenu from '../../components/Helpers/AdminSideMenu';
+import Loading from '../../components/Loading';
 
 const ManageAllTournaments = () => {
+    const [loading,setloading] = useState(true);
     const [tournaments,setTournaments] = useState([]);
     const [auth] = useAuth();
 
@@ -15,6 +16,7 @@ const ManageAllTournaments = () => {
 
     const getTournaments = async ()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/get-tournaments`,{
                 headers:{
                     Authorization:auth?.token
@@ -22,12 +24,14 @@ const ManageAllTournaments = () => {
             });
             if(data?.success){
                 setTournaments(data.tournaments);
+                setloading(false);
             }else{
                 toast.error(data.message);
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.message)
+            toast.error(error?.response?.data?.message);
+            setloading(false);
         }
     }
 
@@ -47,7 +51,7 @@ const ManageAllTournaments = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error?.message);
+            toast.error(error?.response?.data?.message);
         }
     }
   return (
@@ -58,13 +62,12 @@ const ManageAllTournaments = () => {
                 <AdminSideMenu/>
                 </div>
                 <div className="col-md-9">
-                    
                     <div className='row text-center mb-2'>
                         <div className="col">
                             <h1>ALL TOURMANENTS</h1>
                         </div>
                     </div>
-                    <div className="row text-center">
+                    {!loading&&<div className="row text-center">
                         <div className="col d-flex flex-wrap justify-content-center">
                             {tournaments.length>0?tournaments.map(t=>(
                                 <div className="card lt-card-color mb-3 ms-3" style={{width: '18rem '}}>
@@ -83,7 +86,11 @@ const ManageAllTournaments = () => {
                                 <h5 className='text-center'>No Tournaments to manage</h5>
                             }
                         </div>
-                    </div>
+                    </div>}
+                    {
+                        loading&&
+                        <Loading/>
+                    }
                 </div>
             </div>
         </div>

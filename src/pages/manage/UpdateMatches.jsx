@@ -5,8 +5,11 @@ import { Link, useParams } from 'react-router-dom';
 import UpdateSingleMatch from './UpdateSingleMatch';
 import Layout from '../../components/Layout/Layout';
 import Spinner from '../../components/Spinner';
+import Loading from '../../components/Loading';
 
 const UpdateMatches = () => {
+    const [loading,setloading] = useState(true);
+    const [deleting,setdeleting] = useState(false);
     const [updateMatch,setUpdateMatch]=useState(false);
     const [currentMatchId,setCurrentMatchID] = useState(null);
     const [matches,setMatches] = useState();
@@ -16,6 +19,7 @@ const UpdateMatches = () => {
     const token = JSON.parse(localStorage.getItem('tennis-auth'))?.token;
     const verifyuser = async()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/verify-tournament-organiser/${params.slug}`,{
                 headers:{
                     Authorization:token
@@ -24,12 +28,15 @@ const UpdateMatches = () => {
             if(data?.success){
                 setUser(true);
                 setTid(data.tournament._id);
+                setloading(false);
             }else{
                 setUser(false);
                 toast.error(data?.message)
+                setloading(false);
             }
         } catch (error) {
             console.log('Something went wrong');
+            setloading(false);
         }
     }
     useEffect(()=>{
@@ -40,9 +47,11 @@ const UpdateMatches = () => {
     const getMatches = async()=>{
         try {
             if(tid==="" ) return;
+            setloading(true);
             const {data} =  await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-matches/${tid}`);
             if(data?.success){
                 setMatches(data.matches);
+                setloading(false);
             }
         } catch (error) {
             console.log(error);
@@ -65,22 +74,26 @@ const UpdateMatches = () => {
         const confirmed = window.confirm('Are you sure to delete the match');
         if(!confirmed) return;
         try {
+            setdeleting(true);
             const {data} = await axios.delete(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/delete-match/${e.target.value}`);
             if(data?.success){
                 toast.success(data?.message);
                 getMatches();
+                setdeleting(false);
             }else {
                 toast.error(data?.message);
+                setdeleting(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message);
+            setdeleting(false);
         }
     }
 
   return (
-    <Layout>{
-        user===true?
+    <Layout>
+        {!loading&&user===true?
         (<div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
                 <div className="row text-center">
                     <div className="col-md-3 mt-3 ">
@@ -152,7 +165,7 @@ const UpdateMatches = () => {
                                                                 <p className="card-text mt-2">Match Date : {m?.matchDate}</p>
                                                                 <div className="ms-1 mb-3">
                                                                     <button value={m._id} onClick={(e)=>{setCurrentMatchID(e.target.value);setUpdateMatch(true)}} className='btn btn-primary ms-2'>UPDATE</button>
-                                                                    <button value={m._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2'>Delete</button>
+                                                                    <button value={m._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2' disabled={deleting?true:false}>Delete</button>
                                                                 </div>
                                                         </div>
                                                     )):
@@ -171,6 +184,9 @@ const UpdateMatches = () => {
                     </div>
                 </div>
             </div>):(
+                loading?
+                <Loading/>
+                :
                 <Spinner path='/'/>
             )
         }

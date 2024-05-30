@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 
 const Profile = () => {
+    const [loading,setloading] = useState(false);
     const user = JSON.parse(localStorage.getItem('tennis-auth'))?.user;
     const [name,setName]=useState(user.name);
     const [email,setEmail]=useState(user.email);
@@ -13,6 +14,7 @@ const Profile = () => {
     const handleUpdate = async(e)=>{
         e.preventDefault();
         try{
+            setloading(true);
             const {data} = await axios.put(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/update-profile`,{
                 name,
                 email,
@@ -21,6 +23,7 @@ const Profile = () => {
             });
             if(!data?.success){
                 toast.error(data?.message);
+                setloading(false);
             }else {
                 toast.success(data?.message);
                 const token = JSON.parse(localStorage.getItem("tennis-auth"))?.token;
@@ -29,11 +32,12 @@ const Profile = () => {
                     token
                 }
                 localStorage.setItem('tennis-auth',JSON.stringify(Updated));
-                console.log(JSON.parse(localStorage.getItem("tennis-auth")))
+                setloading(false);
             }
         } catch (error){
             console.log(error);
             toast.error('Something went wrong.')
+            setloading(false);
         }
     }
   return (
@@ -99,7 +103,7 @@ const Profile = () => {
                                         Select to register as a player
                                     </label>
                                 </div>
-                                <button type="submit" className="btn btn-primary">SAVE</button>
+                                <button type="submit" className="btn btn-primary" disabled={loading?true:false}>SAVE</button>
                             </form>
                         </div>
                     </div>

@@ -6,8 +6,10 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import UpdateTournament from './UpdateTournament';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
+import Loading from '../../components/Loading';
 
 const ManageSingleTournament = () => {
+    const [loading,setloading] = useState(true);
     const navigate = useNavigate();
     const [user,setUser] = useState(false);
     const [tid,setTid] = useState("");
@@ -15,6 +17,7 @@ const ManageSingleTournament = () => {
     const userDetails = JSON.parse(localStorage.getItem('tennis-auth'));
     const verifyuser = async()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/verify-tournament-organiser/${params.slug}`,{
                 headers:{
                     Authorization:userDetails?.token
@@ -23,12 +26,15 @@ const ManageSingleTournament = () => {
             if(data?.success){
                 setUser(true);
                 setTid(data.tournament._id);
+                setloading(false);
             }else{
                 setUser(false);
-                toast.error(data?.message)
+                toast.error(data?.message);
+                setloading(false);
             }
         } catch (error) {
             console.log('Something went wrong');
+            setloading(false);
         }
     }
     useEffect(()=>{
@@ -39,7 +45,7 @@ const ManageSingleTournament = () => {
 
   return (
     <Layout>
-        {   user===true?(
+        {!loading&&   user===true?(
             <div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
                 <div className="row text-center ">
                     <div className="col-md-3 mt-3 ">
@@ -74,7 +80,10 @@ const ManageSingleTournament = () => {
                 </div>
             </div>
             ):(
-                <Spinner path={'/'}/>
+                loading?
+                    <Loading/>
+                    :
+                    <Spinner path='/'/>
             )
         }
     </Layout>

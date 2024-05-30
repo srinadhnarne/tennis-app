@@ -5,17 +5,21 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
-
+    const [loading,setloading] = useState(false);
     const [email,setEmail]=useState('');
     const [newPassword,setnewPassword] = useState('');
     const [answer,setAnswer] = useState('');
 
     const navigate = useNavigate();
 
+    const delay = async (ms) => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+
     const handleForgotPassword = async(e)=>{
         e.preventDefault();
-        console.log(email,newPassword,answer);
         try{
+            setloading(true);
             const {data} = await axios.post(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/forgot-password`,{
                 email,
                 newPassword,
@@ -23,9 +27,12 @@ const ForgotPassword = () => {
             });
             if(!data?.success){
                 toast.error(data?.message);
+                setloading(false);
             }else {
                 toast.success(data?.message);
+                await delay(500)
                 navigate('/login');
+                setloading(false);
             }
         } catch (error){
             console.log(error);
@@ -72,7 +79,7 @@ const ForgotPassword = () => {
                         />
                     </div>
                     <div className="mb-3 text-center">
-                        <button type="submit" className="btn btn-primary">SUBMIT</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading?true:false}>SUBMIT</button>
                     </div>
                 </form>
             </div>

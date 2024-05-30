@@ -6,15 +6,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import UserSideMenu from '../../components/Helpers/UserSideMenu';
 import AdminSideMenu from '../../components/Helpers/AdminSideMenu';
+import Loading from '../../components/Loading';
 
 const ManageTournament = () => {
+    const [loading,setloading] = useState(true);
     const [tournaments,setTournaments] = useState([]);
     const [auth] = useAuth();
+    const [deleting,setdeleting] = useState(false);
 
     const navigate = useNavigate();
 
     const getTournaments = async ()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/get-user-tournaments`,{
                 headers:{
                     Authorization:auth?.token
@@ -22,12 +26,15 @@ const ManageTournament = () => {
             });
             if(data?.success){
                 setTournaments(data.tournaments);
+                setloading(false);
             }else{
                 toast.error(data.message);
+                setloading(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message)
+            setloading(false);
         }
     }
 
@@ -40,19 +47,22 @@ const ManageTournament = () => {
         const deletion = window.confirm('Are you sure to delete the tournament');
         if(!deletion) return;
         try {
+            setdeleting(true);
             const {data} = await axios.delete(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/delete-tournament/${e.target.value}`)
             if(data?.success){
                 toast.success('Tournament deleted');
                 getTournaments();
+                setdeleting(false);
             }
         } catch (error) {
             console.log(error);
-            toast.error(error?.message);
+            toast.error(error?.response?.data?.message);
+            setdeleting(false);
         }
     }
   return (
     <Layout>
-        <div className="container-fluid lt-bg-gradient pt-2" style={{minHeight:"72vh"}}>
+        {!loading&&<div className="container-fluid lt-bg-gradient pt-2" style={{minHeight:"72vh"}}>
             <div className="row">
             <div className="col-md-3 mt-3">
                 {auth?.user?.role===1?<AdminSideMenu/>:<UserSideMenu/>}
@@ -75,7 +85,7 @@ const ManageTournament = () => {
                                         <p className="card-text">To : {t.toDate}</p>
                                         <div className="ms-1">
                                             <button onClick={()=>navigate(`/manage-tournament/${t.slug}`)} className='btn btn-primary ms-2'>Manage</button>
-                                            <button value={t._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2'>Delete</button>
+                                            <button value={t._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2' disabled={deleting?true:false}>Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +96,11 @@ const ManageTournament = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>}
+        {
+        loading&&
+        <Loading/>
+        }
     </Layout>
   )
 }

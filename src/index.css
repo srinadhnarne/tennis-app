@@ -145,3 +145,14 @@
   background-color: rgba(247, 245, 242, 0.473);
   border: 0.2px black solid;
 }
+
+/* loading */
+.fade-load{
+  animation: fade 6s infinite;
+}
+
+@keyframes fade {
+  0% { opacity: 0 }
+  50% { opacity: 1 }
+  100% { opacity: 0 }
+}

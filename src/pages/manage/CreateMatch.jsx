@@ -5,13 +5,16 @@ import {TiDeleteOutline} from 'react-icons/ti';
 import Layout from '../../components/Layout/Layout';
 import { Link,useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner';
+import Loading from '../../components/Loading';
 
 const CreateMatch = () => {
+    const [loading,setloading] = useState(true);
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
     const [matchDate,setMatchDate] = useState("");
     const [user,setUser] = useState(false);
     const [tid,setTid] = useState("");
+    const [creating,setcreating] = useState(false);
 
     const delay = async (ms) => new Promise(
         resolve => setTimeout(resolve, ms)
@@ -21,6 +24,7 @@ const CreateMatch = () => {
     const token = JSON.parse(localStorage.getItem('tennis-auth'))?.token;
     const verifyuser = async()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/verify-tournament-organiser/${params.slug}`,{
                 headers:{
                     Authorization:token
@@ -29,12 +33,15 @@ const CreateMatch = () => {
             if(data?.success){
                 setUser(true);
                 setTid(data.tournament._id);
+                setloading(false);
             }else{
                 setUser(false);
                 toast.error(data?.message)
+                setloading(false);
             }
         } catch (error) {
             console.log('Something went wrong');
+            setloading(false);
         }
     }
     useEffect(()=>{
@@ -45,7 +52,7 @@ const CreateMatch = () => {
     const handleCreate = async(e)=>{
         e.preventDefault();
         try {
-            console.log(tid);
+            setcreating(true);
             const {data} = await axios.post(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/create-match`,{
                 tournament:tid,
                 teamA:{
@@ -61,12 +68,14 @@ const CreateMatch = () => {
             if(data?.success){
                 toast.success(data?.message);
                 await delay(500);
+                setcreating(false);
             }else{
                 toast.error(data?.message);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message);
+            setcreating(false);
         }
     }
 
@@ -87,17 +96,15 @@ const CreateMatch = () => {
         if(ind){
             let newTeamA = [...teamPlayers.teamA];
             newTeamA.splice(ind,1);
-            console.log(newTeamA)
             let newTeamB= [...teamPlayers.teamB];
             newTeamB.splice(ind,1);
-            console.log(newTeamB);
             setTeamPlayers({teamA:[...newTeamA],teamB:[...newTeamB]});
         }
     }
 
   return (
     <Layout>
-        {
+        {!loading&&
             user===true?(
             <div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
                     <div className="row text-center">
@@ -214,19 +221,21 @@ const CreateMatch = () => {
                                                             <div className='input-group input-group-sm mb-3'>
                                                                 <button className='btn btn-secondary' onClick={()=>handleAddDiv()}>Add Players</button>
                                                             </div>
-                                                            <button type="submit" className="btn btn-primary">CREATE</button>
+                                                            <button type="submit" className="btn btn-primary" disabled={creating?true:false}>CREATE</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>):(
+                    loading?
+                    <Loading/>
+                    :
                     <Spinner path='/'/>
                 )
         }

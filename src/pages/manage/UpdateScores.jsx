@@ -4,8 +4,11 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
 import Spinner from '../../components/Spinner';
+import Loading from '../../components/Loading';
 
 const UpdateScores = () => {
+    const [loading,setloading] = useState(true);
+    const [deleting,setdeleting] = useState(false);
     const [matches,setMatches] = useState();
     const navigate = useNavigate();
     const [user,setUser] = useState(false);
@@ -14,6 +17,7 @@ const UpdateScores = () => {
     const token = JSON.parse(localStorage.getItem('tennis-auth'))?.token;
     const verifyuser = async()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/verify-tournament-organiser/${params.slug}`,{
                 headers:{
                     Authorization:token
@@ -22,12 +26,15 @@ const UpdateScores = () => {
             if(data?.success){
                 setUser(true);
                 setTid(data.tournament._id);
+                setloading(false);
             }else{
                 setUser(false);
-                toast.error(data?.message)
+                toast.error(data?.message);
+                setloading(false);
             }
         } catch (error) {
             console.log('Something went wrong');
+            setloading(false);
         }
     }
     useEffect(()=>{
@@ -38,13 +45,16 @@ const UpdateScores = () => {
     const getMatches = async()=>{
         try {
             if(tid==="") return;
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-matches/${tid}`);
             if(data?.success){
                 setMatches(data.matches);
+                setloading(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message);
+            setloading(false);
         }
     }
 
@@ -57,22 +67,26 @@ const UpdateScores = () => {
         const confirmed = window.confirm('Are you sure to delete the match');
         if(!confirmed) return;
         try {
+            setdeleting(true);
             const {data} = await axios.delete(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/delete-match/${e.target.value}`);
             if(data?.success){
                 toast.success(data?.message);
                 getMatches();
+                setdeleting(false);
             }else {
                 toast.error(data?.message);
+                setdeleting(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message);
+            setdeleting(false);
         }
     }
 
   return (
     <Layout>
-        {
+        {!loading&&
             user===true?
             (<div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
                     <div className="row text-center">
@@ -138,11 +152,11 @@ const UpdateScores = () => {
                                                                     }
                                                                 </div>
                                                             </div>
-                                                            <p className="card-text">Match Date : {m?.matchDate}</p>
-                                                            <div className="ms-1">
-                                                                <button value={m._id} onClick={(e)=>{navigate(`/matches/edit-score/${params.slug}/${m._id}`)}} className='btn btn-primary ms-2'>UPDATE</button>
-                                                                <button value={m._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2'>Delete</button>
-                                                            </div>
+                                                        </div>
+                                                        <p className="card-text">Match Date : {m?.matchDate}</p>
+                                                        <div className="ms-1 mb-3">
+                                                            <button value={m._id} onClick={(e)=>{navigate(`/matches/edit-score/${params.slug}/${m._id}`)}} className='btn btn-primary ms-2'>UPDATE</button>
+                                                            <button value={m._id} onClick={(e)=>{handleDelete(e)}} className='btn btn-danger ms-2' disabled={deleting?true:false}>Delete</button>
                                                         </div>
                                                     </div>
                                                 )):
@@ -156,7 +170,10 @@ const UpdateScores = () => {
                         </div>
                     </div>
                 </div>):(
-                    <Spinner/>
+                    loading?
+                    <Loading/>
+                    :
+                    <Spinner path='/'/>
                 )
         }
     </Layout>

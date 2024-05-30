@@ -3,22 +3,26 @@ import Layout from '../components/Layout/Layout'
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import TournamentsSideMenu from '../components/Helpers/UserSideMenu';
+import Loading from '../components/Loading';
 
 const Tournaments = () => {
+    const [loading,setloading] = useState(true);
     const [tournaments,setTournaments] = useState([]);
     const navigate = useNavigate();
 
     const getTournaments = async ()=>{
         try{
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/get-tournaments`);
             if(data?.success){
                 setTournaments(data.tournaments);
+                setloading(false);
             }else{
                 toast.error(data?.message);
             }
         } catch(error){
             console.log(error);
+            setloading(false);
         }
     }
 
@@ -36,7 +40,7 @@ const Tournaments = () => {
                             <h1>ALL TOURNAMENTS</h1>
                         </div>
                     </div>
-                    <div className="row ">
+                    {!loading&&<div className="row ">
                         <div className='col d-flex flex-wrap justify-content-center'>
                         {tournaments?.map(t=>(
                                 <div className="card lt-card-color m-3" style={{width: '18rem '}}>
@@ -50,7 +54,10 @@ const Tournaments = () => {
                                 </div>
                         ))}
                         </div>
-                    </div>
+                    </div>}
+                    {
+                        loading&&<Loading/>
+                    }
                 </div>
             </div>
         </div>

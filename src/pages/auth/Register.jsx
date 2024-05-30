@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const [loading,setloading] = useState(false);
     const [email,setEmail]=useState('');
     const [password,setPassword] = useState('');
     const [name,setName] = useState('');
@@ -13,11 +14,14 @@ const Register = () => {
     const [player,setPlayer] = useState(0);
 
     const navigate = useNavigate();
+    const delay = async (ms) => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
 
     const handleRegister = async(e)=>{
         e.preventDefault();
-        console.log(name,email,password,phone,player);
         try{
+            setloading(true);
             const {data} = await axios.post(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/register`,{
                 name,
                 email,
@@ -28,13 +32,17 @@ const Register = () => {
             });
             if(!data?.success){
                 toast.error(data?.message);
+                setloading(false);
             }else {
                 toast.success(data?.message);
+                await delay(500);
                 navigate('/login');
+                setloading(false);
             }
         } catch (error){
             console.log(error);
             toast.error('Something went wrong.')
+            setloading(false);
         }
     }
   return (
@@ -120,13 +128,13 @@ const Register = () => {
                             className="form-check-input" 
                             type="checkbox" 
                             id="flexCheckDefault"
-                            onClick={(e)=>{e.target.checked?setPlayer(2):setPlayer(0);console.log(e.target.checked,player)}}
+                            onClick={(e)=>{e.target.checked?setPlayer(2):setPlayer(0);}}
                         />
                         <label className="form-check-label" htmlFor="flexCheckDefault">
                             Select to register as a player
                         </label>
-                    </div>
-                    <button type="submit" className="btn btn-primary">REGISTER</button>
+                    </div> 
+                    <button type="submit" className="btn btn-primary" disabled={loading?true:false}>REGISTER</button>
                 </form>
             </div>
         </div>

@@ -4,21 +4,28 @@ import AdminSideMenu from '../../components/Helpers/AdminSideMenu'
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import UpdateUser from './UpdateUser';
+import Loading from '../../components/Loading';
 
 const ManageUsers = () => {
+    const [loading,setloading] = useState(false);
+    const [deleting,setdeleting]= useState(false);
     const [currentUserId,setCurrentUserID] = useState(null);
     const [users,setUsers] = useState();
     const getAllUsers = async ()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/get-users`);
             if(data?.success){
                 setUsers(data.users);
+                setloading(false);
             }else{
-                toast.error("Something went wrong")
+                toast.error("Something went wrong");
+                setloading(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message);
+            setloading(false);
         }
     }
 
@@ -35,16 +42,20 @@ const ManageUsers = () => {
         const confirmed = window.confirm('Are you sure to delete user');
         if(!confirmed) return;
         try {
+            setdeleting(true);
             const {data} = await axios.delete(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/delete-user/${e.target.value}`);
             if(data?.success){
                 toast.success(data?.message);
+                setdeleting(false);
                 getAllUsers();
             } else {
                 toast.error("Something went wrong");
+                setdeleting(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message);
+            setdeleting(false);
         }
     }
 
@@ -65,7 +76,7 @@ const ManageUsers = () => {
                                     <h4>ALL USER DETAILS</h4>
                                 </div>
                             </div>
-                            <div className="row test-center">
+                            {!loading&&<div className="row test-center">
                                 <div className="col d-flex flex-wrap justify-content-center">
                                     {users?.length > 0 ? users?.map(u => (
                                         <div className="card lt-card-color ms-lg-2 mb-3" style={{ minWidth: '22rem' }}>
@@ -83,7 +94,7 @@ const ManageUsers = () => {
                                                 <div className="d-flex flex-column justify-conent-center">
                                                     <div className="ms-1 d-flex flex-row justify-content-center gap-2">
                                                         <button value={u._id} onClick={(e) => { setCurrentUserID(e.target.value);}} className='btn btn-primary ms-2'>EDIT</button>
-                                                        <button value={u._id} onClick={(e) => { handleDelete(e) }} className='btn btn-danger ms-2'>Delete</button>
+                                                        <button value={u._id} onClick={(e) => { handleDelete(e) }} className='btn btn-danger ms-2' disabled={deleting?true:false}>Delete</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -92,7 +103,11 @@ const ManageUsers = () => {
                                         <h5 className='text-center'>No Users to manage</h5>
                                     }
                                 </div>
-                            </div>
+                            </div>}
+                            {
+                                loading&&
+                                <Loading/>
+                            }
                         </>
                     }
                     {

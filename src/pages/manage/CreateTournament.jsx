@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminSideMenu from '../../components/Helpers/AdminSideMenu';
 
 const CreateTournament = () => {
+    const [creating,setcreating] = useState(false);
     const [name,setName] = useState("");
     const [fromDate,setFromDate] = useState("");
     const [toDate,setToDate] = useState("");
@@ -15,11 +16,14 @@ const CreateTournament = () => {
     const [auth] = useAuth();
 
     const navigate = useNavigate();
+    const delay = async (ms) => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
 
     const handleCreate = async(e)=>{
         e.preventDefault();
-        console.log(auth);
         try{
+            setcreating(true);
             const {data} = await axios.post(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/create-tournament`,{
                 name,
                 fromDate,
@@ -28,13 +32,17 @@ const CreateTournament = () => {
             })
             if(data?.success){
                 toast.success(data.message);
+                await delay(500);
+                setcreating(false);
                 navigate('/my-tournaments')
             }else {
                 toast.error(data?.message);
+                setcreating(false);
             }
         } catch(error){
             console.log(error);
             toast.error('Something went wrong')
+            setcreating(false);
         }
     }
   return (
@@ -105,7 +113,7 @@ const CreateTournament = () => {
                                                 required
                                             />
                                         </div>
-                                        <button type="submit" className="btn btn-primary">CREATE</button>
+                                        <button type="submit" className="btn btn-primary" disabled={creating?true:false}>CREATE</button>
                                     </form>
                                 </div>
                             </div>

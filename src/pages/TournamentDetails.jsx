@@ -4,8 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
+import Loading from '../components/Loading';
 
 const TournamentDetails = () => {
+    const [loading,setloading] = useState(true);
     const [tournament,setTournament] = useState();
     const [matches,setMatches] = useState([]);
 
@@ -13,6 +15,7 @@ const TournamentDetails = () => {
     const params = useParams();
     const getTournament = async ()=>{
         try{
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/get-tournament/${params.slug}`);
             if(data?.success){
                 setTournament(data.tournament);
@@ -21,26 +24,28 @@ const TournamentDetails = () => {
             }
         } catch(error){
             console.log(error);
+            toast.error('Somethng went wrong');
         }
     }
 
     const getMatches = async()=>{
         try{
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-matches/${tournament._id}`);
             if(data?.success){
                 setMatches(data.matches);
-                // console.log(data.matches,matches);
+                setloading(false);
             }else{
                 toast.error(data?.message);
             }
         } catch(error){
             console.log(error);
+            setloading(false);
         }
     }
 
     useEffect(()=>{
         getTournament();
-        
     },[])
 
     useEffect(()=>{
@@ -49,7 +54,7 @@ const TournamentDetails = () => {
 
   return (
     <Layout>
-        <div className='container-fluid text-center lt-bg-gradient p-5'style={{minHeight:"72vh"}} >
+        {!loading&&<div className='container-fluid text-center lt-bg-gradient p-5'style={{minHeight:"72vh"}} >
             <div className="row h-25">
                 <div className="col d-flex flex-row justify-content-start ms-2">
                     <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={50} /></div>
@@ -65,12 +70,14 @@ const TournamentDetails = () => {
                                 <h6 className="card-subtitle mb-2 text-body-secondary">Venue : {tournament.venue}</h6>
                                 <h6 className="card-subtitle mb-2 text-body-secondary">From : {tournament.fromDate}</h6>
                                 <h6 className="card-subtitle mb-2 text-body-secondary">To : {tournament.toDate}</h6>
+                                {tournament.organiser&&
                                 <div className='card-title d-flex flex-column justify-content-start'>
                                     <h5>ORGANISER</h5>
-                                    <h6 className="card-subtitle mb-2 text-body-secondary">Name : {tournament.organiser.name}</h6>
-                                    <h6 className="card-subtitle mb-2 text-body-secondary">Email : {tournament.organiser.email}</h6>
-                                    <h6 className="card-subtitle mb-2 text-body-secondary">Phone Number : {tournament.organiser.phone}</h6>
+                                    <h6 className="card-subtitle mb-2 text-body-secondary">Name : {tournament?.organiser?.name}</h6>
+                                    <h6 className="card-subtitle mb-2 text-body-secondary">Email : {tournament?.organiser?.email}</h6>
+                                    <h6 className="card-subtitle mb-2 text-body-secondary">Phone Number : {tournament.organiser?.phone}</h6>
                                 </div>
+                                }
                             </div>
                         </div>
                     }
@@ -90,10 +97,10 @@ const TournamentDetails = () => {
                                     <div className="row text-center">
                                         <div className="col d-flex gap-3 flex-wrap justify-content-center align-content-center">
                                             <div className="flex-sm-grow-1">
-                                                <h5 className="card-title text-success">{m.teamA.teamName}</h5>
+                                                <h5 className="card-title">{m.teamA.teamName}</h5>
                                                 <div>
                                                     {m.teamA.teamPlayers?.map(player=>(
-                                                        <div className='text-success'>{player}</div>
+                                                        <div >{player}</div>
                                                     ))}
                                                 </div>
                                             </div>
@@ -101,10 +108,10 @@ const TournamentDetails = () => {
                                                     VS
                                             </div>
                                             <div className="flex-sm-grow-1">
-                                                <h5 className="card-title text-info">{m.teamB.teamName}</h5>
+                                                <h5 className="card-title">{m.teamB.teamName}</h5>
                                                 <div>
                                                     {m.teamB.teamPlayers.map(player=>(
-                                                        <div className='text-info'>{player}</div>
+                                                        <div >{player}</div>
                                                     ))}
                                                 </div>
                                             </div>
@@ -122,7 +129,10 @@ const TournamentDetails = () => {
                     )}
                 </div>
             </div>}
-        </div>
+        </div>}
+        {
+            loading&&<Loading/>
+        }
     </Layout>
   )
 }

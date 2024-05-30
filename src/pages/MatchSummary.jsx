@@ -4,29 +4,60 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
+import Loading from '../components/Loading';
 
 const MatchSummary = () => {
+  const [loading,setloading] = useState(true);
+  const [matchesloading,setmatchesloading] = useState(false);
   const [tournament,setTournament] = useState();
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
     const [matchDate,setMatchDate] = useState("");
     const [matchResult, setMatchResult] = useState("");
     const [scores,setscores] = useState({});
+    const [matches,setMatches] = useState();
 
     const navigate = useNavigate();
     const params = useParams();
 
+    const getMatches = async()=>{
+      try{
+          setmatchesloading(true);
+          const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-matches/${tournament._id}`);
+          if(data?.success){
+              setMatches(data.matches);
+              setmatchesloading(false);
+          }else{
+              toast.error(data?.message);
+          }
+      } catch(error){
+          console.log(error);
+          setmatchesloading(false);
+      }
+  }
+
+  useEffect(()=>{
+      getMatches();
+  },[tournament])
+
     const getMatchDetails = async()=>{
-      const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-single-match/${params.id}`);
-      if(data?.success){
-          setTeamNames({...teamNames,teamA:data.match.teamA.teamName,teamB:data.match.teamB.teamName});
-          setTeamPlayers({...teamPlayers,teamA:[...data.match.teamA.teamPlayers],teamB:[...data.match.teamB.teamPlayers]});
-          setMatchDate(data.match.matchDate);
-          setMatchResult(data.match.matchResult);
-          setscores({...data.match.scores});
-          setTournament({...data.match.tournament})
-      }else{
-          toast.error(data?.message);
+      setloading(true);
+      try {
+        const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-single-match/${params.id}`);
+        if(data?.success){
+            setTeamNames({...teamNames,teamA:data.match.teamA.teamName,teamB:data.match.teamB.teamName});
+            setTeamPlayers({...teamPlayers,teamA:[...data.match.teamA.teamPlayers],teamB:[...data.match.teamB.teamPlayers]});
+            setMatchDate(data.match.matchDate);
+            setMatchResult(data.match.matchResult);
+            setscores({...data.match.scores});
+            setTournament({...data.match.tournament})
+            setloading(false);
+        }else{
+            toast.error(data?.message);
+        }
+      } catch (error) {
+        console.log(error);
+        setloading(false);
       }
   }
   
@@ -36,7 +67,7 @@ const MatchSummary = () => {
 
   return (
     <Layout>
-        <div className="conainer-fluid pt-3 text-center">
+        {!loading&&<div className="conainer-fluid pt-3 text-center">
           <div className="row h-25">
             <div className="col d-flex flex-row justify-content-start ms-2">
                 <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={50} /></div>
@@ -63,7 +94,7 @@ const MatchSummary = () => {
                           <div className="row text-center">
                             <div className="col d-flex gap-4 flex-row flex-sm-row justify-content-center align-content-center">
                               <div className="flex-sm-grow-2">
-                                <h5 className="card-title">{teamNames.teamA}</h5>
+                                <h5 className="card-title">{teamNames?.teamA}</h5>
                                 <div>
                                   {teamPlayers?.teamA?.map(player => (
                                     <div>{player}</div>
@@ -156,8 +187,58 @@ const MatchSummary = () => {
                 </div>
               </div>
             </div>
+
+            {!matchesloading&&matches?.length>1&&<div className="col-md-4">
+              {matches&&<div className="row  mb-3">
+                  <div className="col d-flex flex-wrap justify-content-center">
+                      {matches.length>0?(matches?.map(m=>(
+                        m._id!==params.id&&(
+                          <div>
+                              <div className="card  m-3" style={{width: '18rem ', height:"15rem"}}>
+                                  <div className="card-body d-flex flex-column gap-2 justify-content-center">
+                                      <div className="row text-center">
+                                          <div className="col d-flex gap-2 flex-wrap justify-content-center align-content-center">
+                                              <div className="flex-sm-grow-1">
+                                                  <h5 className="card-title text-success">{m.teamA.teamName}</h5>
+                                                  <div>
+                                                      {m.teamA.teamPlayers?.map(player=>(
+                                                          <div className='text-success'>{player}</div>
+                                                      ))}
+                                                  </div>
+                                              </div>
+                                              <div className='d-flex align-items-center'>
+                                                      VS
+                                              </div>
+                                              <div className="flex-sm-grow-1">
+                                                  <h5 className="card-title text-info">{m.teamB.teamName}</h5>
+                                                  <div>
+                                                      {m.teamB.teamPlayers.map(player=>(
+                                                          <div className='text-info'>{player}</div>
+                                                      ))}
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="card-text">Match Date : {m.matchDate}</div>
+                                  </div>
+                                  <button onClick={()=>navigate(`/match-summary/${params.slug}/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
+                              </div>
+                          </div>)
+                      ))):(
+                          <div>
+                              No matches to display
+                          </div>
+                      )}
+                  </div>
+              </div>}
+            </div>}
+
           </div>
-        </div>
+        </div>}
+        {
+          loading&&
+          <Loading/>
+        }
     </Layout>
   )
 }

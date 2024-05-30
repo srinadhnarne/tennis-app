@@ -2,20 +2,33 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
+import Loading from '../../components/Loading';
 
 const UpdateUser = ({uid,stateSetter}) => {
+    const [loading,setloading] = useState(true);
     const [name,setName]=useState('');
     const [email,setEmail]=useState('');
     const [phone,setPhone] = useState('');
     const [player,setPlayer] = useState('');
+    const [updating,setupdating] = useState(false);
 
     const getUserData = async ()=>{
-        const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/get-user/${uid}`);
-        if(data?.success){
-            setName(data.user.name);
-            setEmail(data.user.email);
-            setPhone(data.user.phone);
-            setPlayer(data.user.role);
+        setloading(true);
+        try {
+            const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/get-user/${uid}`);
+            if(data?.success){
+                setName(data.user.name);
+                setEmail(data.user.email);
+                setPhone(data.user.phone);
+                setPlayer(data.user.role);
+                setloading(false);
+            }else{
+                setloading(false);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error('Something went wrong');
+            setloading(false);
         }
     }
 
@@ -26,6 +39,7 @@ const UpdateUser = ({uid,stateSetter}) => {
     const handleUpdate = async(e)=>{
         e.preventDefault();
         try{
+            setupdating(true);
             const {data} = await axios.put(`${process.env.REACT_APP_API}/lawntennis/api/v1/auth/update-profile`,{
                 name,
                 email,
@@ -34,6 +48,7 @@ const UpdateUser = ({uid,stateSetter}) => {
             });
             if(!data?.success){
                 toast.error(data?.message);
+                setupdating(false);
             }else {
                 toast.success(data?.message);
                 const token = JSON.parse(localStorage.getItem("tennis-auth"))?.token;
@@ -42,6 +57,7 @@ const UpdateUser = ({uid,stateSetter}) => {
                     token
                 }
                 localStorage.setItem('tennis-auth',JSON.stringify(Updated));
+                setupdating(false);
                 stateSetter(null);
             }
         } catch (error){
@@ -61,7 +77,7 @@ const UpdateUser = ({uid,stateSetter}) => {
                 <h4>UPDATE USER</h4>
             </div>
         </div>
-        {
+        {!loading&&
             <div className="row text-center">
                 <div className="col d-flex flex-wrap justify-content-center">
                     <div className="card lt-card-color" style={{ width: '18rem ' }}>
@@ -118,12 +134,16 @@ const UpdateUser = ({uid,stateSetter}) => {
                                     </select>
                                 </div>
 
-                                <button type="submit" className="btn btn-primary">SAVE</button>
+                                <button type="submit" className="btn btn-primary" disabled={updating?true:false}>SAVE</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+        }
+        {
+            loading&&
+            <Loading/>
         }
     </div>
   )

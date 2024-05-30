@@ -7,8 +7,11 @@ import { FaSquare } from "react-icons/fa";
 import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
 import Spinner from '../../components/Spinner';
+import Loading from '../../components/Loading';
 
 const UpdateMatchScore = () => {
+    const [loading,setloading] = useState(true);
+    const [saving,setsaving] = useState(false);
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
     const [matchDate,setMatchDate] = useState("");
@@ -21,6 +24,7 @@ const UpdateMatchScore = () => {
     const token = JSON.parse(localStorage.getItem('tennis-auth'))?.token;
     const verifyuser = async()=>{
         try {
+            setloading(true);
             const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/tournament/verify-tournament-organiser/${params.slug}`,{
                 headers:{
                     Authorization:token
@@ -29,12 +33,15 @@ const UpdateMatchScore = () => {
             if(data?.success){
                 setUser(true);
                 setTid(data.tournament._id);
+                setloading(false);
             }else{
                 setUser(false);
-                toast.error(data?.message)
+                toast.error(data?.message);
+                setloading(false);
             }
         } catch (error) {
             console.log('Something went wrong');
+            setloading(false);
         }
     }
     useEffect(()=>{
@@ -45,6 +52,7 @@ const UpdateMatchScore = () => {
     const navigate = useNavigate();
 
     const getMatchDetails = async()=>{
+        setloading(true);
         const {data} = await axios.get(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/get-single-match/${params.id}`);
         if(data?.success){
             setTeamNames({...teamNames,teamA:data.match.teamA.teamName,teamB:data.match.teamB.teamName});
@@ -52,8 +60,10 @@ const UpdateMatchScore = () => {
             setMatchDate(data.match.matchDate);
             setMatchResult(data.match.matchResult);
             setscores({...data.match.scores});
+            setloading(false);
         }else{
             toast.error(data?.message);
+            setloading(false);
         }
     }
     
@@ -64,7 +74,6 @@ const UpdateMatchScore = () => {
     const handleScoreChange = (e)=>{
         const score = e.target.innerHTML;
         let [set,game,team] = e.target.parentElement.id.split('-');
-        // console.log(score,set,game,team);
         set = Number(set);
         game = Number(game);
         let newSet = {...scores};
@@ -106,17 +115,20 @@ const UpdateMatchScore = () => {
 
     const handleSave = async ()=>{
         try {
+            setsaving(true);
             const {data} = await axios.put(`${process.env.REACT_APP_API}/lawntennis/api/v1/matches/update-match/${params.id}`,{
                 scores,matchResult
             })
             if(data?.success){
                 toast.success('Score Updated');
+                setsaving(false);
             } else{
                 toast.error(data?.message);
+                setsaving(false);
             }
-            getMatchDetails();
         } catch (error) {
             console.log(error)
+            setsaving(false);
         }
     }
 
@@ -138,7 +150,6 @@ const UpdateMatchScore = () => {
         }
         newSet.sets[set][game] = {...newSet.sets[set][game],result:winningTeam};
         setscores({...newSet});
-        console.log(scores);
     }
 
     const handleSetWin = (e)=>{
@@ -153,26 +164,14 @@ const UpdateMatchScore = () => {
     const handleHistory = (e)=>{
         const id = e.target.id?e.target.id.split('-'):e.target.parentElement.id.split('-');
         const [set,game] = [Number(id[0]),Number(id[1])]; 
-        if(id[2]==='delete'){
-            const confirmed = window.confirm(`Are you sure to delete the Game ${game+1} of Set ${set+1}?`);
-            if(!confirmed) return;
-            let newSet= {...scores};
-            if(newSet.sets[set][game].result===teamNames.teamA) newSet.gameResult[set][0]=newSet.gameResult[set][0]-1;
-            if(newSet.sets[set][game].result===teamNames.teamB) newSet.gameResult[set][1]=newSet.gameResult[set][1]-1;
-            newSet.sets[id[0]].splice(id[1],1);
-            newSet.setResult[set]="NA"
-            setscores({...newSet});
-        }
-        else{
-            // let n = scores.length-1;
-            // console.log(n);
-            // for(let i = n-1; i >=0; i--){
-            //     if(scores[i].sets[set][game]!==scores[i+1].sets[set][game]
-            //     ){
-            //         console.log(n,i);
-            //     }
-            // }
-        }
+        const confirmed = window.confirm(`Are you sure to delete the Game ${game+1} of Set ${set+1}?`);
+        if(!confirmed) return;
+        let newSet= {...scores};
+        if(newSet.sets[set][game].result===teamNames.teamA) newSet.gameResult[set][0]=newSet.gameResult[set][0]-1;
+        if(newSet.sets[set][game].result===teamNames.teamB) newSet.gameResult[set][1]=newSet.gameResult[set][1]-1;
+        newSet.sets[id[0]].splice(id[1],1);
+        newSet.setResult[set]="NA"
+        setscores({...newSet});
     }
 
     const handleDeleteSet = (e)=>{
@@ -188,7 +187,7 @@ const UpdateMatchScore = () => {
 
   return (
     <Layout>
-        {user===true?
+        {!loading&&user===true?
             (<div className='container-fluid p-0'>
                 <div className="row h-25 mt-2">
                     <div className="col d-flex flex-row justify-content-start ms-2">
@@ -372,11 +371,14 @@ const UpdateMatchScore = () => {
                 <div className="row mb-3">
                     <div className="col d-flex flex-row justify-content-center gap-2">
                         <button onClick={()=>handleAddSet()} className='btn btn-secondary'>ADD NEW SET</button>
-                        <button onClick={()=>handleSave()} className='btn btn-primary' >SAVE CHANGES</button>
+                        <button onClick={()=>handleSave()} className='btn btn-primary' disabled={saving?true:false}>SAVE CHANGES</button>
                     </div>
                 </div>
             </div>):(
-                <Spinner/>
+                loading?
+                <Loading/>
+                :
+                <Spinner />
             )
         }
     </Layout>
