@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/tennis-app/static/css/main.dc7f79f8.css",
-    "main.js": "/tennis-app/static/js/main.92719cd0.js",
+    "main.css": "/tennis-app/static/css/main.21b43885.css",
+    "main.js": "/tennis-app/static/js/main.5f19bcb1.js",
     "static/media/logo.png": "/tennis-app/static/media/logo.5bae00b191128fa462c6.png",
     "index.html": "/tennis-app/index.html",
-    "main.dc7f79f8.css.map": "/tennis-app/static/css/main.dc7f79f8.css.map",
-    "main.92719cd0.js.map": "/tennis-app/static/js/main.92719cd0.js.map"
+    "main.21b43885.css.map": "/tennis-app/static/css/main.21b43885.css.map",
+    "main.5f19bcb1.js.map": "/tennis-app/static/js/main.5f19bcb1.js.map"
   },
   "entrypoints": [
-    "static/css/main.dc7f79f8.css",
-    "static/js/main.92719cd0.js"
+    "static/css/main.21b43885.css",
+    "static/js/main.5f19bcb1.js"
   ]
 }
