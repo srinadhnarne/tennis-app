@@ -9,7 +9,7 @@ const UserDashboard = () => {
   const user = JSON.parse(localStorage.getItem('tennis-auth'))?.user;
 
   return (
-    <Layout>
+    <Layout title='User Dashboard'>
         {(user&&user?.role!==1)?(<div className='container-fluid lt-bg-gradient p-3' style={{minHeight:"73vh"}}>
           <div className="row  mt-2">
             <div className="col-md-3">

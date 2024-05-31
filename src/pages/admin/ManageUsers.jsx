@@ -60,7 +60,7 @@ const ManageUsers = () => {
     }
 
   return (
-    <Layout>
+    <Layout title='All Users'>
         <div className='container-fluid lt-bg-gradient pt-4' style={{minHeight:"72vh"}}>
             <div className="row">
                 <div className="col-md-3">

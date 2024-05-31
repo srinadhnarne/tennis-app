@@ -58,7 +58,7 @@ const Login = () => {
         }
     }
   return (
-    <Layout>
+    <Layout title='Login'>
         <div className="login lt-bg-gradient">
             <div className="login-body align-content-center">
                 <h4 className='text-center'>LOGIN</h4>

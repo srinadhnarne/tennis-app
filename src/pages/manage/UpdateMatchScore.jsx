@@ -186,7 +186,7 @@ const UpdateMatchScore = () => {
     }
 
   return (
-    <Layout>
+    <Layout title={`Update Score - ${teamNames?.teamA} vs ${teamNames.teamB}`}>
         {!loading&&user===true?
             (<div className='container-fluid p-0'>
                 <div className="row h-25 mt-2">

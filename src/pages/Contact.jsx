@@ -3,7 +3,7 @@ import Layout from '../components/Layout/Layout'
 
 const Contact = () => {
   return (
-    <Layout>
+    <Layout title='Contact Us'>
         <div className='container-fluid' style={{minHeight:"72vh"}}>
           <div className='row d-flex flex-column justify-content-center align-items-center'>
             <div>CONTACT US.</div>

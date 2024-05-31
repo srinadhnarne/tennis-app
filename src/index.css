@@ -120,7 +120,7 @@
 
 .register-body{
   background-color: rgba(237, 235, 232, 0.448);
-  padding: 4vh;
+  padding: 3vh;
   border-radius: 1rem;
   box-shadow: 8px 8px 6px -6px gray;
   &>form{

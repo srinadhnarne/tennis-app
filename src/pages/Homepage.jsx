@@ -27,7 +27,7 @@ const Homepage = () => {
   },[]);
 
   return (
-    <Layout>
+    <Layout title='Home - Lawn Tennis'>
       {!loading&&
         <div className="container-fluid pt-3 pb-3 lt-bg-gradient" style={{minHeight:"72vh"}}>
           <div className="row text-center">

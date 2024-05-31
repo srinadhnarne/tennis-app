@@ -6,7 +6,7 @@ import Profile from '../../components/Helpers/Profile'
 const AdminDashboard = () => {
   
   return (
-    <Layout>
+    <Layout title='Admin Dashboard'>
         <div className='container-fluid lt-bg-gradient pt-4' style={{minHeight:"72vh"}}>
             <div className="row">
                 <div className="col-md-3">

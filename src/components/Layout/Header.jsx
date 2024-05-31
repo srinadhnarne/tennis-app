@@ -25,11 +25,11 @@ const Header = () => {
             <div className="navbar-brand d-flex flex-row ms-4">
               <Link to='/' className="navbar-brand"> <img src={logo} alt='tennis-logo' width={'40px'}/>
               </Link>
-              <div className="d-flex flex-column">
-                <div className="col text-center">
+              <div className="d-flex flex-column align-items-center">
+                <div className="col text-center align-content-center">
                   NIT JSR
                 </div>
-                <div className="col text-center">
+                <div className="col text-center align-content-center">
                   LAWN TENNIS
                 </div>
               </div>

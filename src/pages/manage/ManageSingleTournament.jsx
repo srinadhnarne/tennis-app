@@ -44,7 +44,7 @@ const ManageSingleTournament = () => {
 
 
   return (
-    <Layout>
+    <Layout title={`${params?.slug} - Manage Tournament`}>
         {!loading&&   user===true?(
             <div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
                 <div className="row text-center ">
@@ -71,7 +71,7 @@ const ManageSingleTournament = () => {
                                 <div onClick={()=>{userDetails.user.role===1?(navigate('/dashboard/admin/manage-all-tournaments')):(navigate(`/my-tournaments`))}}><IoArrowBackCircleOutline size={35} /></div>
                             </div>
                         </div>
-                        <div className="row text-center">
+                        <div className="row text-center mb-3">
                             <div className="col d-flex flex-wrap justify-content-center">
                                 <UpdateTournament tid={tid}/>
                             </div>

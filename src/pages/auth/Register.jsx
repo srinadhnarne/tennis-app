@@ -46,7 +46,7 @@ const Register = () => {
         }
     }
   return (
-    <Layout>
+    <Layout title='Register'>
         <div className="register lt-bg-gradient">
             <div className="register-body align-content-center">
                 <h4 className='text-center'>REGISTRATION</h4>

@@ -41,7 +41,7 @@ const ForgotPassword = () => {
     }
 
   return (
-    <Layout>
+    <Layout title='Forgot Password'>
         <div className="register lt-bg-gradient">
             <div className="register-body align-content-center">
                 <h4 className='text-center'>FORGOT PASSWORD</h4>

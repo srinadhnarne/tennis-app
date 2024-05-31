@@ -31,7 +31,7 @@ const Tournaments = () => {
     },[])
 
   return (
-    <Layout>
+    <Layout title='Tournaments'>
         <div className='container-fluid text-center lt-bg-gradient p-2'style={{minHeight:"72vh"}} >
             <div className="row">
                 <div className="col mt-2">

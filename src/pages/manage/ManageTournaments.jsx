@@ -61,7 +61,7 @@ const ManageTournament = () => {
         }
     }
   return (
-    <Layout>
+    <Layout title='My tournaments'>
         {!loading&&<div className="container-fluid lt-bg-gradient pt-2" style={{minHeight:"72vh"}}>
             <div className="row">
             <div className="col-md-3 mt-3">

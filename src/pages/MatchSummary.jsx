@@ -66,7 +66,7 @@ const MatchSummary = () => {
   },[params?.id]);
 
   return (
-    <Layout>
+    <Layout title={`Match Summary ${teamNames.teamA} vs ${teamNames.teamB}`}>
         {!loading&&<div className="conainer-fluid pt-3 text-center">
           <div className="row h-25">
             <div className="col d-flex flex-row justify-content-start ms-2">
@@ -199,10 +199,10 @@ const MatchSummary = () => {
                                       <div className="row text-center">
                                           <div className="col d-flex gap-2 flex-wrap justify-content-center align-content-center">
                                               <div className="flex-sm-grow-1">
-                                                  <h5 className="card-title text-success">{m.teamA.teamName}</h5>
+                                                  <h5 className="card-title">{m.teamA.teamName}</h5>
                                                   <div>
                                                       {m.teamA.teamPlayers?.map(player=>(
-                                                          <div className='text-success'>{player}</div>
+                                                          <div >{player}</div>
                                                       ))}
                                                   </div>
                                               </div>
@@ -210,10 +210,10 @@ const MatchSummary = () => {
                                                       VS
                                               </div>
                                               <div className="flex-sm-grow-1">
-                                                  <h5 className="card-title text-info">{m.teamB.teamName}</h5>
+                                                  <h5 className="card-title">{m.teamB.teamName}</h5>
                                                   <div>
                                                       {m.teamB.teamPlayers.map(player=>(
-                                                          <div className='text-info'>{player}</div>
+                                                          <div >{player}</div>
                                                       ))}
                                                   </div>
                                               </div>
@@ -221,7 +221,7 @@ const MatchSummary = () => {
                                       </div>
                                       <div className="card-text">Match Date : {m.matchDate}</div>
                                   </div>
-                                  <button onClick={()=>navigate(`/match-summary/${params.slug}/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
+                                  <button onClick={()=>navigate(`/match-summary/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
                               </div>
                           </div>)
                       ))):(

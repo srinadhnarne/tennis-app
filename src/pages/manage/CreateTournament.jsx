@@ -46,7 +46,7 @@ const CreateTournament = () => {
         }
     }
   return (
-    <Layout>
+    <Layout title={`Create Tournament ${name?"-":""} ${name}`}>
         <div className="container-fluid lt-bg-gradient mt-2" style={{minHeight:"72vh"}}>
             <div className="row">
             <div className="col-md-3 mt-3">

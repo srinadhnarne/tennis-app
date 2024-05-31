@@ -64,7 +64,7 @@ const UpdateTournament = ({tid}) => {
     <>
         {
             !loading&&
-            <div className='container-fluid'>
+            <div className='container-fluid mb-3'>
                 <div className='row text-center mb-2'>
                     <div className="col">
                         <h1>UPDATE TOURNAMENT</h1>

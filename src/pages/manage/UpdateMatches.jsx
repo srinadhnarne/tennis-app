@@ -92,7 +92,7 @@ const UpdateMatches = () => {
     }
 
   return (
-    <Layout>
+    <Layout title={`${params.slug} Update Matches `}>
         {!loading&&user===true?
         (<div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
                 <div className="row text-center">

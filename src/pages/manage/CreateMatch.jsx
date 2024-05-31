@@ -103,7 +103,7 @@ const CreateMatch = () => {
     }
 
   return (
-    <Layout>
+    <Layout title={`${params?.slug} Create Match`}>
         {!loading&&
             user===true?(
             <div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>

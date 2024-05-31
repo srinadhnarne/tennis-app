@@ -53,16 +53,20 @@ const TournamentDetails = () => {
     },[tournament])
 
   return (
-    <Layout>
-        {!loading&&<div className='container-fluid text-center lt-bg-gradient p-5'style={{minHeight:"72vh"}} >
-            <div className="row h-25">
+    <Layout title={`${tournament?.name}`}>
+        {!loading&&<div className='container-fluid text-center lt-bg-gradient p-3'style={{minHeight:"72vh"}} >
+            <div className="row">
                 <div className="col d-flex flex-row justify-content-start ms-2">
-                    <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={50} /></div>
+                    <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={40} /></div>
+                </div>
+                <div className="col">
+                    <h1>TOURNAMENT DETAILS</h1>
+                </div>
+                <div className='col'>
                 </div>
             </div>
-            <div className="row pt-4 mb-3">
+            <div className="row pt-2 mb-3">
                 <div className="col d-flex flex-column justify-content-center">
-                    <h1>TOURNAMENT DETAILS</h1>
                     {tournament&&
                         <div className='d-flex justify-content-center pt-2'>
                             <div className='card lt-card-color d-flex flex-wrap justify-content-center' style={{width:"18rem"}}>
@@ -117,9 +121,9 @@ const TournamentDetails = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="card-text">Match Date : {m.matchDate}</div>
                                 </div>
-                                    <button onClick={()=>navigate(`/match-summary/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
+                                <div className="card-text mb-2">Match Date : {m.matchDate}</div>
+                                <button onClick={()=>navigate(`/match-summary/${m._id}`)} className='btn btn-primary p-3'>More Details</button>
                             </div>
                         </div>
                     ))):(

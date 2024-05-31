@@ -85,7 +85,7 @@ const UpdateScores = () => {
     }
 
   return (
-    <Layout>
+    <Layout title={`${params.slug} Update Scores`}>
         {!loading&&
             user===true?
             (<div className="container-fluid lt-bg-gradient" style={{minHeight:"72vh"}}>
