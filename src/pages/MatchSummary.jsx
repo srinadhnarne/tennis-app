@@ -188,13 +188,15 @@ const MatchSummary = () => {
               </div>
             </div>
 
-            {!matchesloading&&matches?.length>1&&<div className="col-md-4">
-              {matches&&<div className="row  mb-3">
+            {!matchesloading&&matches?.length>1&&
+            <div className="col-md-4">
+              {matches&&
+              <div className="row mb-3">
                   <div className="col d-flex flex-wrap justify-content-center">
                       {matches.length>0?(matches?.map(m=>(
                         m._id!==params.id&&(
                           <div>
-                              <div className="card  m-3" style={{width: '18rem ', height:"15rem"}}>
+                              <div className="card  m-3" style={{width: '18rem'}}>
                                   <div className="card-body d-flex flex-column gap-2 justify-content-center">
                                       <div className="row text-center">
                                           <div className="col d-flex gap-2 flex-wrap justify-content-center align-content-center">
