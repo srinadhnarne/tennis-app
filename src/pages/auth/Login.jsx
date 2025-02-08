@@ -44,7 +44,8 @@ const Login = () => {
                     user:data.user,
                     token:data.token
                 })
-                toast.success(data?.message)&&await delay(500);
+                toast.success(data?.message);
+                await delay(2000);
                 navigate(location.state ||'/');
                 setloading(false);
             } else{
@@ -52,7 +53,6 @@ const Login = () => {
                 setloading(false);
             }
         } catch (error) {
-            console.log(error);
             toast.error('Something went wrong');
             setloading(false);
         }
