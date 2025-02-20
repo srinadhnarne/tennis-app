@@ -96,7 +96,7 @@ const TournamentDetails = () => {
                 <div className="col d-flex gap-3 flex-wrap justify-content-center">
                     {matches.length>0?(matches?.map(m=>(
                         <div>
-                            <div className="card" style={{width: '22rem ', height:"15rem"}}>
+                            <div className="card" style={{height:"15rem"}}>
                                 <div className="card-body d-flex flex-column gap-2 justify-content-center">
                                     <div className="row text-center">
                                         <div className="col d-flex gap-3 flex-wrap justify-content-center align-content-center">
