@@ -15,9 +15,10 @@ const UpdateMatchScore = () => {
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
     const [matchDate,setMatchDate] = useState("");
-    const [matchResult, setMatchResult] = useState("");
+    const [matchResult, setMatchResult] = useState("NA");
     const [scores,setscores] = useState({});
     const scoreboard=["0","15","30","40","AD"];
+    const [setsWon,setSetsWon] = useState([0,0]);
     const [user,setUser] = useState(false);
     const [tid,setTid] = useState("");
     const params = useParams();
@@ -132,6 +133,20 @@ const UpdateMatchScore = () => {
         }
     }
 
+    const setResultFromGameResult = ()=>{
+        let setResult = new Array(scores?.gameResult?.length).fill("NA");;
+        scores?.gameResult?.map((item,ind)=>{
+            if(item[0]>item[1]){
+                setResult[ind]=teamNames?.teamA;
+            } else if(item[0]<item[1]){
+                setResult[ind]=teamNames?.teamB;
+            } else{
+                setResult[ind] = "NA";
+            }
+        })
+        return setResult;
+    }
+
     const handleGameWin = (e)=>{
         const winningTeam = e.target.value;
         let [set,game] = e.target.id.split('-');
@@ -149,17 +164,18 @@ const UpdateMatchScore = () => {
             if(newSet.sets[set][game].result===teamNames.teamB) newSet.gameResult[set][1]=newSet.gameResult[set][1]-1;
         }
         newSet.sets[set][game] = {...newSet.sets[set][game],result:winningTeam};
+        newSet.setResult = setResultFromGameResult();
         setscores({...newSet});
     }
 
-    const handleSetWin = (e)=>{
-        const winningTeam = e.target.value;
-        let set = e.target.id;
-        set = Number(set);
-        let newSet = {...scores};
-        newSet.setResult[set]=winningTeam;
-        setscores({...newSet});
-    }
+    // const handleSetWin = (e)=>{
+    //     const winningTeam = e.target.value;
+    //     let set = e.target.id;
+    //     set = Number(set);
+    //     let newSet = {...scores};
+    //     newSet.setResult[set]=winningTeam;
+    //     setscores({...newSet});
+    // }
 
     const handleHistory = (e)=>{
         const id = e.target.id?e.target.id.split('-'):e.target.parentElement.id.split('-');
@@ -185,6 +201,30 @@ const UpdateMatchScore = () => {
         setscores({...newSet});
     }
 
+    const calculateSetsWon = ()=>{
+        let countA = 0;
+        let countB = 0;
+        scores?.setResult?.map((item)=>{
+            if(item===teamNames.teamA) countA++; 
+            else if(item===teamNames.teamB) countB++;
+        })
+        setSetsWon([countA,countB]);
+    }
+
+    useEffect(()=>{
+        calculateSetsWon();
+    },[scores])
+
+    useEffect(()=>{
+        if(setsWon[0]>setsWon[1]){
+            setMatchResult(teamNames.teamA);
+        } else if(setsWon[0]<setsWon[1]){
+            setMatchResult(teamNames.teamB);
+        } else{
+            setMatchResult("NA");
+        }
+    },[setsWon])
+
   return (
     <Layout title={`Update Score - ${teamNames?.teamA} vs ${teamNames.teamB}`}>
         {!loading&&user===true?
@@ -204,7 +244,7 @@ const UpdateMatchScore = () => {
                                             <h5 className="card-title text-success">{teamNames.teamA}</h5>
                                             <div>
                                                 {teamPlayers?.teamA?.map(player=>(
-                                                    <div className='text-success'>{player}</div>
+                                                    <div className='text-success text-center'>{player}</div>
                                                 ))}
                                             </div>
                                         </div>
@@ -215,7 +255,7 @@ const UpdateMatchScore = () => {
                                             <h5 className="card-title text-info">{teamNames.teamB}</h5>
                                             <div>
                                                 {teamPlayers?.teamB?.map(player=>(
-                                                    <div className='text-info'>{player}</div>
+                                                    <div className='text-info text-center'>{player}</div>
                                                 ))}
                                             </div>
                                         </div>
@@ -231,13 +271,25 @@ const UpdateMatchScore = () => {
                                         <div>
                                             MATCH WINNER : 
                                         </div>
-                                        <div>
-                                            <select value={matchResult} onChange={(e)=>{setMatchResult(e.target.value)}} className="form-select form-select-sm" aria-label="Small select example">
+                                        <div >
+                                            {matchResult}
+                                            {/* For manually updating match result */}
+                                            {/* <select value={matchResult} onChange={(e)=>{setMatchResult(e.target.value)}} className="form-select form-select-sm" aria-label="Small select example">
                                                 <option>NA</option>
                                                 <option >{teamNames.teamA}</option>
                                                 <option >{teamNames.teamB}</option>
-                                            </select>
+                                            </select> */}
                                         </div>
+                                    </div>
+                                </div>
+                                <div className="row mt-1">
+                                    <div className="col d-flex flex-row gap-2 justify-content-center align-items-center">
+                                    <div>
+                                        Set Score :
+                                    </div>
+                                    <div>
+                                        {setsWon[0]} - {setsWon[1]}
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -277,10 +329,10 @@ const UpdateMatchScore = () => {
                                             {s.map((g,ind)=>(
                                                 <div className='d-flex gap-2 flex-row justify-content-evenly mb-3'>
                                                     <div className='col-md-3 d-flex gap-2 gap-lg-1 flex-column justify-content-center'>
-                                                        <div className='d-flex justify-content-center fw-bold'>GAME {ind+1}</div>
+                                                        <div className='d-flex justify-content-center text-center fw-bold'>GAME {ind+1}</div>
                                                         <div className='d-flex flex-column flex-lg-row gap-1 justify-content-center'>
-                                                            <div className='d-flex justify-content-center'>Won by</div> 
-                                                            <div className='d-flex justify-content-center flex'>
+                                                            {/* <div className='d-flex justify-content-center text-center'>Won by</div>  */}
+                                                            <div className='d-flex justify-content-center text-center flex'>
                                                                 <select id={`${index}-${ind}`} value={g.result} defaultValue={`${g.result}`} onChange={(e)=>handleGameWin(e)} className="form-select form-select-sm" aria-label="Small select example">
                                                                     <option>NA</option>
                                                                     <option >{teamNames.teamA}</option>
@@ -348,11 +400,12 @@ const UpdateMatchScore = () => {
                                                         SET RESULT :
                                                     </div>
                                                     <div>
-                                                        <select id={`${index}`} value={scores.setResult[index]} defaultValue={`${scores.setResult[index]}`} onChange={(e)=>handleSetWin(e)} className="form-select form-select-sm" aria-label="Small select example">
+                                                        {scores.setResult[index]}
+                                                        {/* <select id={`${index}`} value={scores.setResult[index]} defaultValue={`${scores.setResult[index]}`} onChange={(e)=>handleSetWin(e)} className="form-select form-select-sm" aria-label="Small select example">
                                                             <option>NA</option>
                                                             <option >{teamNames.teamA}</option>
                                                             <option >{teamNames.teamB}</option>
-                                                        </select>
+                                                        </select> */}
                                                     </div>
                                                 </div>
                                             </div>

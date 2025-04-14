@@ -100,11 +100,11 @@ const TournamentDetails = () => {
                                 <div className="card-body d-flex flex-column gap-2 justify-content-center">
                                     <div className="row text-center">
                                         <div className="col d-flex gap-3 flex-wrap justify-content-center align-content-center">
-                                            <div className="flex-sm-grow-1">
-                                                <h5 className="card-title">{m.teamA.teamName}</h5>
+                                            <div className="flex-sm-grow-1 text-center">
+                                                <h5 className="card-title text-center">{m.teamA.teamName}</h5>
                                                 <div>
                                                     {m.teamA.teamPlayers?.map(player=>(
-                                                        <div >{player}</div>
+                                                        <div className='text-center'>{player}</div>
                                                     ))}
                                                 </div>
                                             </div>

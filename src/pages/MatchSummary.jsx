@@ -16,6 +16,7 @@ const MatchSummary = () => {
     const [matchResult, setMatchResult] = useState("");
     const [scores,setscores] = useState({});
     const [matches,setMatches] = useState();
+    const [setsWon,setSetsWon] = useState([0,0]);
 
     const navigate = useNavigate();
     const params = useParams();
@@ -60,6 +61,16 @@ const MatchSummary = () => {
         setloading(false);
       }
   }
+
+  const calculateSetWin = (teamName)=>{
+    let count = 0;
+    scores.setResult.map((item)=>{
+      if(item===teamName) count++; 
+    })
+    return count;
+  }
+
+
   
   useEffect(()=>{
       getMatchDetails();
@@ -126,6 +137,16 @@ const MatchSummary = () => {
                               </div>
                               <div>
                                 {matchResult}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row mt-1">
+                            <div className="col d-flex flex-row gap-2 justify-content-center align-items-center">
+                              <div>
+                                Set Score :
+                              </div>
+                              <div>
+                                {calculateSetWin(teamNames.teamA)} - {calculateSetWin(teamNames.teamB)}
                               </div>
                             </div>
                           </div>
