@@ -69,7 +69,7 @@ const TournamentDetails = () => {
                 <div className="col d-flex flex-column justify-content-center">
                     {tournament&&
                         <div className='d-flex justify-content-center pt-2'>
-                            <div className='card lt-card-color d-flex flex-wrap justify-content-center' style={{width:"18rem"}}>
+                            <div className='card lt-card-color d-flex flex-wrap justify-content-center' style={{width: '22rem'}}>
                                 <h3 className="card-title">{tournament.name}</h3>
                                 <h6 className="card-subtitle mb-2 text-body-secondary">Venue : {tournament.venue}</h6>
                                 <h6 className="card-subtitle mb-2 text-body-secondary">From : {tournament.fromDate}</h6>
@@ -96,7 +96,7 @@ const TournamentDetails = () => {
                 <div className="col d-flex gap-3 flex-wrap justify-content-center">
                     {matches.length>0?(matches?.map(m=>(
                         <div>
-                            <div className="card" style={{height:"15rem"}}>
+                            <div className="card" style={{width: '22rem'}}>
                                 <div className="card-body d-flex flex-column gap-2 justify-content-center">
                                     <div className="row text-center">
                                         <div className="col d-flex gap-3 flex-wrap justify-content-center align-content-center">
