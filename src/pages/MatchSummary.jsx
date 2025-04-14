@@ -84,7 +84,7 @@ const MatchSummary = () => {
                 <div className="col">
                   <div className="row h-25 mt-3">
                     <div className="col d-flex flex-row justify-content-center p-0">
-                      <div className="card lt-card-color" style={{ width: '22rem' }}>
+                      <div className="card lt-card-color" style={{ width: '25rem' }}>
                         <div className="card-body align-content-center">
                           <div className="row mb-2">
                             <div className="col">
