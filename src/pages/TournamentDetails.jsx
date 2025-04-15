@@ -96,10 +96,10 @@ const TournamentDetails = () => {
                 <div className="col d-flex gap-3 flex-wrap justify-content-center">
                     {matches.length>0?(matches?.map(m=>(
                         <div>
-                            <div className="card" style={{width: '22rem'}}>
+                            <div className="card" style={{minWidth: '280px'}}>
                                 <div className="card-body d-flex flex-column gap-2 justify-content-center">
                                     <div className="row text-center">
-                                        <div className="col d-flex gap-3 flex-wrap justify-content-center align-content-center">
+                                        <div className="col d-flex flex-column flex-sm-row gap-3 flex-wrap justify-content-center align-content-center text-center">
                                             <div className="flex-sm-grow-1 text-center">
                                                 <h5 className="card-title text-center">{m.teamA.teamName}</h5>
                                                 <div>
@@ -108,7 +108,7 @@ const TournamentDetails = () => {
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div className='d-flex align-items-center'>
+                                            <div className='d-flex justify-content-center align-items-center fw-bold text-center'>
                                                     VS
                                             </div>
                                             <div className="flex-sm-grow-1">

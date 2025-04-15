@@ -90,6 +90,7 @@ const UpdateMatchScore = () => {
             result:"NA"
         })
         setscores({...newSet});
+        handleSave();
     }
 
     const handleAddSet = ()=>{
@@ -112,6 +113,7 @@ const UpdateMatchScore = () => {
             newSet.setResult.push("NA");
         }
         setscores({...newSet})
+        handleSave();
     }
 
     const handleSave = async ()=>{
@@ -166,6 +168,7 @@ const UpdateMatchScore = () => {
         newSet.sets[set][game] = {...newSet.sets[set][game],result:winningTeam};
         newSet.setResult = setResultFromGameResult();
         setscores({...newSet});
+        handleSave();
     }
 
     // const handleSetWin = (e)=>{
@@ -177,7 +180,7 @@ const UpdateMatchScore = () => {
     //     setscores({...newSet});
     // }
 
-    const handleHistory = (e)=>{
+    const handleGameDelete = (e)=>{
         const id = e.target.id?e.target.id.split('-'):e.target.parentElement.id.split('-');
         const [set,game] = [Number(id[0]),Number(id[1])]; 
         const confirmed = window.confirm(`Are you sure to delete the Game ${game+1} of Set ${set+1}?`);
@@ -186,8 +189,9 @@ const UpdateMatchScore = () => {
         if(newSet.sets[set][game].result===teamNames.teamA) newSet.gameResult[set][0]=newSet.gameResult[set][0]-1;
         if(newSet.sets[set][game].result===teamNames.teamB) newSet.gameResult[set][1]=newSet.gameResult[set][1]-1;
         newSet.sets[id[0]].splice(id[1],1);
-        newSet.setResult[set]="NA"
+        newSet.setResult = setResultFromGameResult();
         setscores({...newSet});
+        handleSave();
     }
 
     const handleDeleteSet = (e)=>{
@@ -199,6 +203,7 @@ const UpdateMatchScore = () => {
         newSet.setResult.splice(setInd,1);
         newSet.gameResult.splice(setInd,1);
         setscores({...newSet});
+        handleSave();
     }
 
     const calculateSetsWon = ()=>{
@@ -228,18 +233,18 @@ const UpdateMatchScore = () => {
   return (
     <Layout title={`Update Score - ${teamNames?.teamA} vs ${teamNames.teamB}`}>
         {!loading&&user===true?
-            (<div className='container-fluid p-0'>
-                <div className="row h-25 mt-2">
-                    <div className="col d-flex flex-row justify-content-start ms-2">
-                        <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={50} /></div>
+            (<div className='container-fluid p-3 w-100'>
+                <div className="row d-flex flex-row h-25 mt-2">
+                    <div className="col justify-content-start p-0">
+                        <IoArrowBackCircleOutline size={50} onClick={()=>navigate(-1)}/>
                     </div>
                 </div>
                 <div className="row h-25 mt-3">
-                    <div className="col d-flex flex-row justify-content-center p-0">
-                        <div className="card lt-card-color" style={{width: '20rem'}}>
+                    <div className="col d-flex flex-row justify-content-center p-0 p-lg-1">
+                        <div className="card lt-card-color" style={{minWidth: '270px'}}>
                             <div className="card-body align-content-center">
                                 <div className="row text-center">
-                                    <div className="col d-flex gap-2 flex-wrap justify-content-center align-content-center">
+                                    <div className="col d-flex flex-column flex-lg-row gap-2 flex-wrap justify-content-center align-items-center">
                                         <div className="flex-sm-grow-1">
                                             <h5 className="card-title text-success">{teamNames.teamA}</h5>
                                             <div>
@@ -248,7 +253,7 @@ const UpdateMatchScore = () => {
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className='d-flex align-items-center'>
+                                        <div className='d-flex fw-bold align-items-center'>
                                                 VS
                                         </div>
                                         <div className="flex-sm-grow-1">
@@ -296,17 +301,17 @@ const UpdateMatchScore = () => {
                         </div>
                     </div>
                 </div>
-                <div className='row text-center mt-3'>
-                    <div className="col">
+                <div className='row d-flex text-center mt-3 p-0'>
+                    <div className="col d-flex justify-content-center align-items-center p-0">
                         <h4>UPDATE SCORE</h4>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col d-flex flex-column justify-content-center">
+                <div className="row m-0">
+                    <div className="col d-flex flex-column justify-content-center p-0">
                         {scores?.sets?.map((s,index)=>(
-                            <div className='row  mb-3'>
-                                <div className="col d-flex justify-content-center">
-                                    <div className="card" >
+                            <div className='row mb-3'>
+                                <div className="col d-flex justify-content-center p-0">
+                                    <div className="card" style={{minWidth: '350px'}} >
                                         <div className="card-body">
                                             <div className="row mt-3 d-flex flex-column justify-content-start align-items-start">
                                                 <div id={`${index}`} onClick={(e)=>handleDeleteSet(e)} className="col fw-bold d-flex justify-content-end align-items-center" data-toggle="tooltip" data-placement="top" title="Delete Set">
@@ -327,7 +332,7 @@ const UpdateMatchScore = () => {
                                                 </div>
                                             </div>
                                             {s.map((g,ind)=>(
-                                                <div className='d-flex gap-2 flex-row justify-content-evenly mb-3'>
+                                                <div className='d-flex gap-2 p-lg-2 flex-row justify-content-evenly mb-3'>
                                                     <div className='col-md-3 d-flex gap-2 gap-lg-1 flex-column justify-content-center'>
                                                         <div className='d-flex justify-content-center text-center fw-bold'>GAME {ind+1}</div>
                                                         <div className='d-flex flex-column flex-lg-row gap-1 justify-content-center'>
@@ -344,17 +349,16 @@ const UpdateMatchScore = () => {
                                                     <div className="col-md-9">
                                                         <div className="row">
                                                             <div className="col d-flex justify-content-end">
-                                                                {/* <button id={`${index}-${ind}-back`} onClick={(e)=>handleHistory(e)} className='btn'><RxReset color='black' id={`${index}-${ind}-back`}/></button> */}
-                                                                <button id={`${index}-${ind}-delete`} onClick={(e)=>handleHistory(e)} className='btn' data-toggle="tooltip" data-placement="top" title="Delete Game"><TiDeleteOutline size={20} color='red' id={`${index}-${ind}-delete`}/></button>
+                                                                {/* <button id={`${index}-${ind}-back`} onClick={(e)=>handleGameDelete(e)} className='btn'><RxReset color='black' id={`${index}-${ind}-back`}/></button> */}
+                                                                <button id={`${index}-${ind}-delete`} onClick={(e)=>handleGameDelete(e)} className='btn' data-toggle="tooltip" data-placement="top" title="Delete Game"><TiDeleteOutline size={20} color='red' id={`${index}-${ind}-delete`}/></button>
                                                             </div>
                                                         </div>
                                                         <div className="row">
-                                                            <div className="col  d-flex flex-column flex-lg-row justify-content-center">
+                                                            <div className="col  d-flex flex-column flex-lg-row  gap-1 gap-lg-2 justify-content-center">
                                                                 <div className='m-1 ms-3 ms-lg-1'>
                                                                     <ul id={`${index}-${ind}-teamA`} onClick={(e)=>{handleScoreChange(e)}} className="list-group list-group-horizontal">
                                                                         {scoreboard.map((value)=>{
                                                                             if(value===g.teamA){
-                                                                                
                                                                                 return (<li className="list-group-item text text-bg-success" value={value}>{value}</li>)
                                                                             }else{
                                                                                 return (<li className="list-group-item" value={value}>{value}</li>)
@@ -421,8 +425,8 @@ const UpdateMatchScore = () => {
                         ))}
                     </div>
                 </div>
-                <div className="row mb-3">
-                    <div className="col d-flex flex-row justify-content-center gap-2">
+                <div className="row mb-3 p-0">
+                    <div className="col d-flex flex-row justify-content-center gap-2 p-0">
                         <button onClick={()=>handleAddSet()} className='btn btn-secondary'>ADD NEW SET</button>
                         <button onClick={()=>handleSave()} className='btn btn-primary' disabled={saving?true:false}>SAVE CHANGES</button>
                     </div>

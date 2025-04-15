@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import '../App.css'
 import Layout from '../components/Layout/Layout'
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
 import Loading from '../components/Loading';
+import {useReactToPrint} from 'react-to-print'
+import { MdOutlineFileDownload } from "react-icons/md";
 
 const MatchSummary = () => {
-  const [loading,setloading] = useState(true);
-  const [matchesloading,setmatchesloading] = useState(false);
-  const [tournament,setTournament] = useState();
+    const [loading,setloading] = useState(true);
+    const [matchesloading,setmatchesloading] = useState(false);
+    const [tournament,setTournament] = useState();
     const [teamNames,setTeamNames] = useState({teamA:"",teamB:""});
     const [teamPlayers,setTeamPlayers] = useState({teamA:[],teamB:[]});
     const [matchDate,setMatchDate] = useState("");
     const [matchResult, setMatchResult] = useState("");
     const [scores,setscores] = useState({});
     const [matches,setMatches] = useState();
-    const [setsWon,setSetsWon] = useState([0,0]);
 
     const navigate = useNavigate();
     const params = useParams();
@@ -60,7 +62,7 @@ const MatchSummary = () => {
         console.log(error);
         setloading(false);
       }
-  }
+    }
 
   const calculateSetWin = (teamName)=>{
     let count = 0;
@@ -70,35 +72,44 @@ const MatchSummary = () => {
     return count;
   }
 
-
-  
   useEffect(()=>{
       getMatchDetails();
   },[params?.id]);
 
+  const contentRef = useRef();
+  const handleDownload = useReactToPrint({ 
+    contentRef
+  });
+
+
   return (
     <Layout title={`Match Summary ${teamNames.teamA} vs ${teamNames.teamB}`}>
-        {!loading&&<div className="conainer-fluid pt-3 text-center">
+        {!loading&&<div className="conainer-fluid pt-3 text-center" id='summary'>
           <div className="row h-25">
             <div className="col d-flex flex-row justify-content-start ms-2">
                 <div onClick={()=>navigate(-1)}><IoArrowBackCircleOutline size={50} /></div>
             </div>
           </div>
           <div className="row">
-            <div className="col">
+            <div className="col" ref={contentRef} >
+              <div className='row d-none print'>
+                <div className='col text-center'>
+                  NIT JAMSHEDPUR LAWN TENNIS
+                </div>
+              </div>
               <div className="row text-center">
                 <div className="col">
                   <h2>MATCH SUMMARY</h2>
                 </div>
               </div> 
-              <div className="row">
+              <div className="row text-center">
                 <div className="col">
                   <div className="row h-25 mt-3">
                     <div className="col d-flex flex-row justify-content-center p-0">
                       <div className="card lt-card-color" style={{ width: '23rem' }}>
                         <div className="card-body align-content-center">
-                          <div className="row mb-2">
-                            <div className="col">
+                          <div className="row mb-2 text-center">
+                            <div className="col ">
                               <h4>{tournament?.name}</h4>
                             </div>
                           </div>
@@ -150,20 +161,25 @@ const MatchSummary = () => {
                               </div>
                             </div>
                           </div>
+                          <div className="row mt-1 no-print">
+                            <div className="col">
+                              <button className='p-2 rounded btn btn-primary' onClick={handleDownload}><MdOutlineFileDownload size={20}/> Download Scorecard</button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="row mt-5">
+              <div className="row mt-5 text-center">
                 <div className="col d-flex flex-column justify-content-center">
                   {scores?.sets?.map((s,index)=>(
-                    <div className='row  mb-3'>
+                    <div className='row mb-3'>
                       <div className="col d-flex justify-content-center">
                         <div className="card" style={{minWidth:"25rem"}}>
                           <div className="card-body">
-                            <div className="row text-center mb-2">
+                            <div className="row mb-2">
                               <div className="col">
                                 <h4 className='fw-bold'>SET {index+1}</h4>
                               </div>
@@ -217,10 +233,10 @@ const MatchSummary = () => {
                       {matches.length>0?(matches?.map(m=>(
                         m._id!==params.id&&(
                           <div>
-                              <div className="card  m-3" style={{width: '18rem'}}>
+                              <div className="card m-3" >
                                   <div className="card-body d-flex flex-column gap-2 justify-content-center">
                                       <div className="row text-center">
-                                          <div className="col d-flex gap-2 flex-wrap justify-content-center align-content-center">
+                                          <div className="col d-flex flex-column flex-lg-row gap-2 flex-wrap justify-content-center align-items-center text-center">
                                               <div className="flex-sm-grow-1">
                                                   <h5 className="card-title">{m.teamA.teamName}</h5>
                                                   <div>
@@ -229,7 +245,7 @@ const MatchSummary = () => {
                                                       ))}
                                                   </div>
                                               </div>
-                                              <div className='d-flex align-items-center'>
+                                              <div className='d-flex align-items-center fw-bold'>
                                                       VS
                                               </div>
                                               <div className="flex-sm-grow-1">

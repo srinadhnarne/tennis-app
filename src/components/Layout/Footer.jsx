@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <div className='footer'>
+    <div className='footer' style={{minWidth:'300px'}}>
       <div className="row text-center">
         <div className="col">
           ALL RIGHTS RESERVED &copy; - NITJSR LAWN TENNIS

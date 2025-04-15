@@ -40,9 +40,9 @@ const Homepage = () => {
               {
                 recentMatches?.map((m)=>(
                   <>
-                    <div className="card" style={{width: '22rem'}}>
-                      <div className="card-body">
-                        <div className="card-title d-flex flex-row gap-3 gap-lg-4 flex-row justify-content-center">
+                    <div className="card text-center" style={{minWidth: '270px'}}>
+                      <div className="card-body pb-0">
+                        <div className="card-title d-flex flex-column flex-sm-row gap-3 gap-lg-4 flex-row justify-content-center align-items-center text-center">
                           <div className='d-flex flex-column'>
                               <h5 className='mb-1 d-flex justify-content-center'>{m?.teamA?.teamName}</h5>
                               {   
@@ -56,7 +56,7 @@ const Homepage = () => {
                                   </div>
                               }
                           </div>
-                          <div className='align-content-center'>
+                          <div className='d-flex justify-content-center align-items-center fw-bold text-center'>
                               VS
                           </div>
                           <div>

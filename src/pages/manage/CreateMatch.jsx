@@ -134,9 +134,9 @@ const CreateMatch = () => {
                                                 <h1>NEW MATCH</h1>
                                             </div>
                                         </div>
-                                        <div className="row text-center">
+                                        <div className="row text-center mb-3">
                                             <div className="col d-flex flex-wrap justify-content-center">
-                                                <div className="card lt-card-color" style={{width: '18rem '}}>
+                                                <div className="card lt-card-color" style={{minWidth: '270px'}}>
                                                     <div className="card-body align-content-center">
                                                         <form onSubmit={(e)=>handleCreate(e)}>
                                                             <div className="input-group input-group-sm mb-3">
@@ -168,7 +168,7 @@ const CreateMatch = () => {
                                                                 />
                                                             </div>
                                                             <div className="input-group input-group-sm mb-3">
-                                                                <span className="input-group-text" id="inputGroup-sizing-sm">From</span>
+                                                                <span className="input-group-text" id="inputGroup-sizing-sm">Date</span>
                                                                 <input 
                                                                     type="date" 
                                                                     className="form-control" 

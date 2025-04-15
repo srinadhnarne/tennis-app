@@ -16,7 +16,7 @@ const Header = () => {
 
   return (
     <>
-      <nav className="navbar sticky-top navbar-expand-lg bg-body-tertiary ">
+      <nav className="navbar sticky-top navbar-expand-lg bg-body-tertiary " style={{minWidth:'300px'}}>
         <div className="container-fluid">
           <div className='d-flex flex-row'>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">

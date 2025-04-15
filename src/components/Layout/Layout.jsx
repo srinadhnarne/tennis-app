@@ -20,7 +20,7 @@ const Layout = ({title='Lawn Tennis',
         <title>{title}</title>
       </Helmet>
       <Header/>
-      <div className="main" style={{minHeight:'71vh'}}>
+      <div className="main" style={{minHeight:'71vh', minWidth:'300px'}}>
         <Toaster />
         {children}
       </div>

@@ -119,9 +119,9 @@ const UpdateScores = () => {
                                         <div className="row">
                                             <div className="col d-flex flex-wrap justify-content-center">
                                                 {matches?.length>0?matches?.map(m=>(
-                                                    <div className="card lt-card-color mb-3 ms-3" style={{minWidth: '18rem ', maxWidth:"22rem"}}>
-                                                        <div className="card-body">
-                                                        <div className='card-title gap-3 gap-lg-4 d-flex flex-row justify-content-center'>
+                                                    <div className="card lt-card-color mb-3 ms-3" style={{minWidth: '270px'}}>
+                                                        <div className="card-body pb-1">
+                                                            <div className='card-title gap-3 gap-lg-4 d-flex flex-column flex-lg-row justify-content-center align-items-center'>
                                                                 <div className='d-flex flex-column'>
                                                                     <h5>{m?.teamA?.teamName}</h5>
                                                                     {
@@ -135,7 +135,7 @@ const UpdateScores = () => {
                                                                         </div>
                                                                     }
                                                                 </div>
-                                                                <div className='align-content-center'>
+                                                                <div className='justify-content-center align-items-center fw-bold'>
                                                                     VS
                                                                 </div>
                                                                 <div className='d-flex flex-column'>
