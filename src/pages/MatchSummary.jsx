@@ -92,7 +92,7 @@ const MatchSummary = () => {
           </div>
           <div className="row">
             <div className="col" ref={contentRef} >
-              <div className='row d-none print'>
+              <div className='row mb-3 d-none print'>
                 <div className='col text-center'>
                   NIT JAMSHEDPUR LAWN TENNIS
                 </div>
